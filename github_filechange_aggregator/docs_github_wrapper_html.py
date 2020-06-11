@@ -4,6 +4,7 @@ from lxml import html
 import datetime
 from datetime import datetime
 import calendar
+import sys
 
 class docs_github_wrapper_html:
 
@@ -18,6 +19,7 @@ class docs_github_wrapper_html:
     contributors_ignore = {}
     sorted_update_list = []
     sorted_new_list = []
+    sorted_contributor_list = []
 
     def __init__(self,newtoken,begindate,enddate,svc):
         self.patoken = newtoken
@@ -135,11 +137,11 @@ class docs_github_wrapper_html:
                         return 0      
                 else:
                     print("File: "+file_path)
-                    print("Size of last json array less than zero")
+                    print("Size of last json array is zero")
                     #print(json_data_array)
             else:
                 print("File: "+file_path)
-                print("Size of json array less than zero")
+                print("Size of json response is zero")
                 #print(json_data_array)
             return 0
         except Exception as e:
@@ -151,14 +153,26 @@ class docs_github_wrapper_html:
         
     def extract_pr_numbers(self, json_response_array):
         pr_list = []
-        for json_response in json_response_array:  
-            json_obj = json.loads(json.dumps(json_response))
-            for pr in json_obj['items']:
-                number = json.dumps(pr['number'])
-                #title = json.dumps(pr['title'])
-                pr_list.append(number)        
-        return(pr_list)
-        
+        try:
+            for json_response in json_response_array:  
+                json_obj = json.loads(json.dumps(json_response))
+                if len(json_obj) == 0:
+                    sys.exit("No json content returned from search")
+                    return 0
+                #if not 'items' in json_obj or len(json_obj['items']) == 0:
+                #    print(json.dumps(json_obj['items']))
+                #    print("Expected array 'items' is json object was empty. Please verify repo details and permissions.")
+                #    #return 0
+                for pr in json_obj['items']:
+                    number = json.dumps(pr['number'])
+                    #title = json.dumps(pr['title'])
+                    pr_list.append(number)        
+            return(pr_list)
+        except Exception as e:
+            print(e)
+            sys.exit("Error extracting PR numbers from GitHub search query")
+            return 0
+            
     def get_pr_data_v4(self, pr_number_array, repo):
 
         url = 'https://api.github.com/graphql' 
@@ -179,7 +193,7 @@ class docs_github_wrapper_html:
                     state
                     publishedAt
                     number
-                    files(first: 5){
+                    files(first: 20){
                     edges{
                       node{
                         path
@@ -203,6 +217,7 @@ class docs_github_wrapper_html:
         file_info = {}
         updated_file_info_list = []
         new_file_info_list = []
+        contributor_info_list = []
         
         for pr in pr_data_array:
             try:
@@ -284,11 +299,20 @@ class docs_github_wrapper_html:
                                        "doc_title":file_info[key]["doc_title"],
                                        "newly_added":new_article})
         
+        #get a list of all new files sorted by total modifications
         sorted_list = sorted(updated_file_info_list, key=lambda k: k['total_modifications'], reverse=True) 
         self.sorted_update_list = sorted_list
         
+        #get a list of all UPDATED files sorted by total modifications
         sorted_list2 = sorted(new_file_info_list, key=lambda k: k['total_modifications'], reverse=True) 
         self.sorted_new_list = sorted_list2  
+        
+        for key in self.top_contributors.keys():
+            contributor_info_list.append({"contributor_name":key,"total_prs":self.top_contributors[key]})
+        
+        #get a list of all contributors sorted by total PRs
+        sorted_list3 = sorted(contributor_info_list, key=lambda k: k['total_prs'], reverse=True) 
+        self.sorted_contributor_list = sorted_list3  
            
     def html_table(self, digest_mode):
         final_string = '''
@@ -334,7 +358,7 @@ class docs_github_wrapper_html:
         for file_dict in self.sorted_update_list:      
             total_lines_modified += file_dict["total_modifications"]
         
-        final_string += '<body><h1>PR Report for {}</h1>'.format(self.service)
+        final_string += '<body><h1>PR Report for {} from {} to {}</h1>'.format(self.service, self.begin_date, self.end_date)
         final_string += '<table id="docupdates"><tr><th>Total Docs Added</th><th>Total Docs Updated</th><th>Total Lines Modified</th></tr><tr><td>{}</td><td>{}</td><td>{}</td></tr></table></br></br>'.format(total_newly_added,total_updated,total_lines_modified)
         
         final_string += '<table id="docupdates"><tr><th>Contributor</th><th>PRs authored</th></tr>'
