@@ -2,7 +2,6 @@ Gpt_41_nano = "openai/gpt-4.1-nano"
 Gpt_41_mini = "openai/gpt-4.1-mini"
 Claude_35_haiku = "anthropic/claude-3.5-haiku"
 Claude_37_sonnet = "anthropic/claude-3.7-sonnet"
-#Gemini_25_Pro_Preview = "google/gemini-2.5-pro-preview" #Ojo es caro!
 Gemini_25_Flash_Preview_thinking = "google/gemini-2.5-flash-preview:thinking"
 deepseek_deepseek_r1 = "deepseek/deepseek-r1"
 Gemini_20_flash_001 = "google/gemini-2.0-flash-001"
