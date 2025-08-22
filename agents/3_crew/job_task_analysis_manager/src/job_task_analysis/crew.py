@@ -33,15 +33,6 @@ class JobTaskAnalysis():
         )
 
     @agent
-    def subject_matter_expert3(self) -> Agent:
-        return Agent(
-            config=self.agents_config['subject_matter_expert3'],
-            verbose=True,
-            tools=[SerperDevTool()],
-            allow_delegation=True
-        )
-
-    @agent
     def facilitator(self) -> Agent:
         return Agent(
             config=self.agents_config['facilitator'],
@@ -62,17 +53,10 @@ class JobTaskAnalysis():
         )
 
     @task
-    def create_skilling_plan3(self) -> Task:
-        return Task(
-            config=self.tasks_config['create_skilling_plan3'],
-        )
-
-
-    @task
     def create_final_skilling_plan(self) -> Task:
         return Task(
             config=self.tasks_config['create_final_skilling_plan'],
-            context=[self.create_skilling_plan1(),self.create_skilling_plan2(),self.create_skilling_plan3()]
+            context=[self.create_skilling_plan1(),self.create_skilling_plan2()]
         )
 
 
@@ -90,8 +74,8 @@ class JobTaskAnalysis():
         return Crew(
             agents=self.agents, # Automatically created by the @agent decorator
             tasks=self.tasks, # Automatically created by the @task decorator
-            process=Process.hierarchical,
-            manager_agent = manager,
+            process=Process.sequential,
+            #manager_agent = manager,
             memory=True,
             verbose=True,
         )

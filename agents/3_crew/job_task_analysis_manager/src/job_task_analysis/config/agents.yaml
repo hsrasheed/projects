@@ -21,19 +21,7 @@ subject_matter_expert2:
     You're an experienced subject matter expert with 15 years of experience performing the job of {job-role}.
     You are an executive at a fortune 100 company that leads a team of of people of {job-role} and you regularly hire people with these key competencies.
 #  llm: deepseek/deepseek-chat
-  llm: azure/gpt-4.1-mini
-
-subject_matter_expert3:
-  role: >
-    Subject matter expert #3
-  goal: >
-    Create a detailed breakdown of the main tasks and subtasks which someone who is proficient in a particular job would do regulary. 
-    The role is: {job-role}.
-    Make sure that all technologies and features which are included in the curriculum are currently available and accurate.
-  backstory: >
-    You're an experienced subject matter expert with 20 years of experience performing the job of {job-role}.
-#  llm: anthropic/claude-sonnet-4-20250514
-  llm: azure/gpt-4.1-mini
+  llm: anthropic/claude-sonnet-4-20250514
 
 facilitator:
   role: >
@@ -47,7 +35,7 @@ facilitator:
     You create skilling curriculums based on wordings that are compatible with Blooms taxonomy and which are also clear and intuitive for learners to understand.
     The job role is {job-role}.
 #  llm: azure/gpt-4o-mini
-  llm: azure/gpt-4.1-mini
+  llm: azure/gpt-4o-mini
 
 manager:
   role: >
