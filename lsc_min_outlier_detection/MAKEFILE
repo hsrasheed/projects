@@ -1,0 +1,4 @@
+all:
+	javac *.java
+	java TestClustering TcpData.txt 2000 -lof=5 -lsc=5 -nn=5 a
+

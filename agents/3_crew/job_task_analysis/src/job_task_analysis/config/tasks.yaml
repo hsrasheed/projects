@@ -1,0 +1,39 @@
+create_skilling_plan1:
+  description: >
+    You are creating a curriculum for technical education that consists of the main tasks and subtasks needed for someone to be proficient in a given job role.
+    The job is {job-role}. Be clear, concise and to the point.
+  expected_output: >
+    A list with no more than 5 main tasks and 5 subtasks for each main task that represent the most important and frequently performed tasks for someone in the given job role.
+  #agent: subject_matter_expert1
+  output_file: output/skilling-plan1.md
+
+create_skilling_plan2:
+  description: >
+    You are creating a curriculum for technical education that consists of the main tasks and subtasks needed for someone to be proficient in a given job role.
+    The job is {job-role}. Be clear, concise and to the point.
+  expected_output: >
+    A list with no more than 5 main tasks and 5 subtasks for each main task that represent the most important and frequently performed tasks for someone in the given job role.
+  #agent: subject_matter_expert2
+  output_file: output/skilling-plan2.md
+
+create_skilling_plan3:
+  description: >
+    You are creating a curriculum for technical education that consists of the main tasks and subtasks needed for someone to be proficient in a given job role.
+    The job is {job-role}. Be clear, concise and to the point.
+  expected_output: >
+    A list with no more than 5 main tasks and 5 subtasks for each main task that represent the most important and frequently performed tasks for someone in the given job role.
+  #agent: subject_matter_expert3
+  output_file: output/skilling-plan3.md
+
+create_final_skilling_plan:
+  description: >
+    Review the curriculums proposed by each of the subject matter experts regarding what are the main tasks and subtasks for the given job role of {job-role}.
+    Create a final list that synthesizes all of the lists together.
+  expected_output: >
+    A final curriculum for the job role of {job-role} that consists of no more than 5 main tasks and 5 subtasks for each main task.
+  #agent: facilitator
+  context:
+    - create_skilling_plan1
+    - create_skilling_plan2
+    - create_skilling_plan3
+  output_file: output/final-skilling-plan.md
